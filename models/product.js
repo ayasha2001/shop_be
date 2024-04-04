@@ -18,7 +18,7 @@ const getProductsFromFile = (cb) => {
 };
 
 module.exports = class Product {
-  constructor(id,title, imageUrl, description, price) {
+  constructor(id, title, imageUrl, description, price) {
     this.title = title;
     this.imageUrl = imageUrl;
     this.description = description;
@@ -26,7 +26,7 @@ module.exports = class Product {
   }
 
   save() {
-    console.log(this.id,"id")
+    // console.log(this.id,"id")
     getProductsFromFile((products) => {
       if (this.id) {
         const existingProductIndex = products.findIndex(
@@ -44,6 +44,18 @@ module.exports = class Product {
           console.log(err);
         });
       }
+    });
+  }
+
+  static deleteProductById(id, cb) {
+    console.log(id, "prod");
+    getProductsFromFile((products) => {
+      const updatedProducts = products.filter((prod) => {
+        return prod.id !== id;
+      });
+      fs.writeFile(p, JSON.stringify(updatedProducts), (err) => {
+        console.log(err);
+      });
     });
   }
 
