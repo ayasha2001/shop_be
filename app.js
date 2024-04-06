@@ -1,5 +1,6 @@
 const path = require("path");
 require("dotenv").config();
+const Product = require('./models/new-product')
 
 const express = require("express");
 const bodyParser = require("body-parser");
@@ -26,10 +27,10 @@ app.use(errorController.get404);
 sequelize
   .sync()
   .then((res) => {
-    console.log("res",res);
-  })
-  .catch((err) => {
-    console.log("err", err);
-  });
+      
+    })
+    .catch((err) => {
+        console.log("err", err);
+    });
+    app.listen(3000);
 
-app.listen(3000);
