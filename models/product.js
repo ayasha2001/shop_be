@@ -1,5 +1,7 @@
 const fs = require("fs");
 const path = require("path");
+const database = require("../util/database");
+const Cart = require("./cart");
 
 const p = path.join(
   path.dirname(process.mainModule.filename),
@@ -19,6 +21,7 @@ const getProductsFromFile = (cb) => {
 
 module.exports = class Product {
   constructor(id, title, imageUrl, description, price) {
+    this.id = id;
     this.title = title;
     this.imageUrl = imageUrl;
     this.description = description;
@@ -26,41 +29,26 @@ module.exports = class Product {
   }
 
   save() {
-    // console.log(this.id,"id")
-    getProductsFromFile((products) => {
-      if (this.id) {
-        const existingProductIndex = products.findIndex(
-          (prod) => prod.id === this.id
-        );
-        const updatedProducts = [...products];
-        updatedProducts[existingProductIndex] = this;
-        fs.writeFile(p, JSON.stringify(updatedProducts), (err) => {
-          console.log(err);
-        });
-      } else {
-        this.id = Math.random().toString();
-        products.push(this);
-        fs.writeFile(p, JSON.stringify(products), (err) => {
-          console.log(err);
-        });
-      }
-    });
+    return database.execute(
+      "INSERT INTO products (title, price, description, imageUrl) VALUES (?, ?, ?, ?)",
+      [this.title, this.price, this.description, this.imageUrl]
+    );
   }
 
-  static deleteProductById(id, cb) {
-    console.log(id, "prod");
+  static deleteById(id) {
     getProductsFromFile((products) => {
-      const updatedProducts = products.filter((prod) => {
-        return prod.id !== id;
-      });
+      const product = products.find((prod) => prod.id === id);
+      const updatedProducts = products.filter((prod) => prod.id !== id);
       fs.writeFile(p, JSON.stringify(updatedProducts), (err) => {
-        console.log(err);
+        if (!err) {
+          Cart.deleteProduct(id, product.price);
+        }
       });
     });
   }
 
-  static fetchAll(cb) {
-    getProductsFromFile(cb);
+  static fetchAll() {
+    return database.execute("select * from products");
   }
 
   static findById(id, cb) {

@@ -1,9 +1,13 @@
 const path = require('path');
+require('dotenv').config();
+
 
 const express = require('express');
 const bodyParser = require('body-parser');
 
+const db = require("./util/database")
 const errorController = require('./controllers/error');
+
 
 const app = express();
 
@@ -17,7 +21,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/admin', adminRoutes);
-app.use(shopRoutes);
+app.use('/shop',shopRoutes);
 
 app.use(errorController.get404);
 
