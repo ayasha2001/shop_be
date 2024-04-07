@@ -13,11 +13,13 @@ exports.postAddProduct = (req, res, next) => {
   const imageUrl = req.body.imageUrl;
   const price = req.body.price;
   const description = req.body.description;
+  console.log(req.user)
   Product.create({
     title: title,
     imageUrl: imageUrl,
     price: price,
     description: description,
+    userId: req.user.id,
   })
     .then((res) => {
       console.log("res", res);
@@ -91,7 +93,7 @@ exports.postDeleteProduct = (req, res, next) => {
   const prodId = req.body.productId;
   Product.findByPk(prodId)
     .then((product) => {
-      console.log(product)
+      console.log(product);
       return product.destory();
     })
     .then(() => {
