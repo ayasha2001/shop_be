@@ -20,7 +20,7 @@ exports.getProduct = (req, res, next) => {
   const prodId = req.params.productId;
   Product.findByPk(prodId)
     .then((product) => {
-      console.log(product)
+      console.log(product);
       res.render("shop/product-detail", {
         product: product,
         pageTitle: product.title,
@@ -33,17 +33,17 @@ exports.getProduct = (req, res, next) => {
 };
 
 exports.getIndex = (req, res, next) => {
-  Product.findAll().then(
-    ((products) => {
+  Product.findAll()
+    .then((products) => {
       res.render("shop/index", {
         prods: products,
         pageTitle: "Shop",
         path: "/",
       });
     })
-  ).catch((err) => {
-    console.log(err);
-  });
+    .catch((err) => {
+      console.log(err);
+    });
 };
 
 exports.getCart = (req, res, next) => {
@@ -66,7 +66,6 @@ exports.getCart = (req, res, next) => {
     });
   });
 };
-
 exports.postCart = (req, res, next) => {
   const prodId = req.body.productId;
   Product.findById(prodId, (product) => {

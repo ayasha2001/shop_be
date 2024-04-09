@@ -13,7 +13,7 @@ exports.postAddProduct = (req, res, next) => {
   const imageUrl = req.body.imageUrl;
   const price = req.body.price;
   const description = req.body.description;
-  console.log(req.user)
+  console.log(req.user);
   Product.create({
     title: title,
     imageUrl: imageUrl,
@@ -75,7 +75,9 @@ exports.postEditProduct = (req, res, next) => {
 };
 
 exports.getProducts = (req, res, next) => {
-  Product.findAll()
+  // Product.findAll()
+  req.user
+    .getProducts()
     .then((products) => {
       console.log(products);
       res.render("admin/products", {
